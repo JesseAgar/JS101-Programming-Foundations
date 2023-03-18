@@ -1,4 +1,6 @@
-
+function isOdd(integer) {
+  return Math.abs(integer) % 2 == 1;
+}
 
 
 /* UNDERSTAND THE PROBLEM
@@ -10,9 +12,9 @@
   - ask clarifying questions
   - examine all examples
 * INPUTS
-  *
+  * one integer, positive, negative, 0
 * OUTPUTS
-  *
+  * True if integer absolute value is odd
 * RULES
   *
 * REQUIREMENTS
@@ -22,11 +24,16 @@
   - understand how the input translates to output
   - identify edge cases
   - create the test cases and confirm outputs
-* VALID CASES
-  *
-* EDGE CASES
-  *
-*/
+* VALID CASES  */
+console.log(isOdd(2)); // => false
+console.log(isOdd(5)); // => true
+console.log(isOdd(-17)); // => true
+console.log(isOdd(-8)); // => false
+console.log(isOdd(7)); // => true
+// * EDGE CASES
+console.log(isOdd(0)); // => false
+console.log(isOdd(0.2)); // => false
+console.log(isOdd(-0.2)); // => false
 /* DATA STRUCTURES
   - what sort of actions do you have to do (sort, collect, filter, etc.)
   - what kind of data are you primarily dealing with? (strings, arrays, numbers, objects, etc.)
