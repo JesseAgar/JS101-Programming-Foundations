@@ -18,7 +18,7 @@ function sumOrProductSeries() {
 }
 
 function sumSeries(x) {
-  if (x<=0) {
+  if (x <= 0) {
     return 0;
   } else {
     return x + sumSeries(x-1);
@@ -26,13 +26,12 @@ function sumSeries(x) {
 }
 
 function productSeries(x) {
-  if (x<=1) {
+  if (x <= 1) {
     return 1;
   } else {
     return x * productSeries(x-1);
   } 
 }
-
 sumOrProductSeries();
 
 /* UNDERSTAND THE PROBLEM
