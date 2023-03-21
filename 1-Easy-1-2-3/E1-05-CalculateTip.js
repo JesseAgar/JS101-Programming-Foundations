@@ -1,10 +1,13 @@
 let readlineSync = require('readline-sync');
 
 function calculateTip() {
-  let bill = readlineSync.question("What is the bill?");
-  let tipPercent = readlineSync.question("What is the tip percentage (ex: 15%)?");
-  console.log(bill + bill );
-  console.log(
+  let bill = readlineSync.question("What is the bill amount? ");
+  bill = bill[0] == '$' ? bill.substring(1,bill.length)
+                        : bill;
+  let tipPercent = readlineSync.question("What is the tip percentage (ex: 15%)? ");
+  console.log('The tip is: $' + (parseFloat(bill) * parseFloat(tipPercent)/100).toFixed(2));
+  console.log('The total is: $' + (parseFloat(bill) + parseFloat(bill) * parseFloat(tipPercent)/100).toFixed(2));
+
 }
 
 /* UNDERSTAND THE PROBLEM
