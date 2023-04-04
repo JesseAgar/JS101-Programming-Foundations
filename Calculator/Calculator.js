@@ -1,33 +1,45 @@
 let readlineSync = require('readline-sync');
+let language = readlineSync.question(" => Language? en- English fr- French (default- English):  ");
+let calculatorMessage = require('./calculator-message.json');
+let messages = calculatorMessage.en;
+switch (language) {
+  case "en": 
+    messages = calculatorMessage.en;
+    break;
+  case "fr":
+    messages = calculatorMessage.fr;
+    break;
+}
+
 
 calculator();
 
 // eslint-disable-next-line max-lines-per-function, max-statements
 function calculator() {
-  console.log("=> First Number:");
+  console.log(messages.askNum1);
   let firstNumber = readlineSync.question();
   while (invalidNumber(firstNumber)) {
-    console.log("=> Invalid input. First Number:");
+    console.log(messages.reAskNum1);
     firstNumber = readlineSync.question();
   }
 
-  console.log("=> Second Number:");
+  console.log(messages.askNum2);
   let secondNumber = readlineSync.question();
   while (invalidNumber(secondNumber)) {
-    console.log("=> Invalid input. Second Number:");
+    console.log(messages.reAskNum2);
     secondNumber = readlineSync.question();
   }
 
-  console.log("=> Operation ( 1 = addition, 2 = subtraction, 3 = division, 4 = multiplication):");
+  console.log(messages.reAskOperation);
   let operation = readlineSync.question();
   while (operation <= 0 || operation >= 5 || Number.isNaN(Number(operation))) {
-    console.log("=> Invalid input. Operation ( 1 = addition, 2 = subtraction, 3 = division, 4 = multiplication):");
+    console.log(messages.reAskOperation);
     operation = readlineSync.question();
   }
 
   logResult(operation, +firstNumber, +secondNumber);
 
-  let goAgain = readlineSync.question("=> Go again? 1-Yes 2-No: ");
+  let goAgain = readlineSync.question(messages.goAgain);
   if (goAgain == '1') calculator();
 
 }
