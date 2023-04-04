@@ -1,45 +1,39 @@
 let readlineSync = require('readline-sync');
 let language = readlineSync.question(" => Language? en- English fr- French (default- English):  ");
-let calculatorMessage = require('./calculator-message.json');
-let messages = calculatorMessage.en;
-switch (language) {
-  case "en": 
-    messages = calculatorMessage.en;
-    break;
-  case "fr":
-    messages = calculatorMessage.fr;
-    break;
-}
+let messages = require('./calculator-message.json');
 
+function prompt(message) {
+  return messages[language][message];
+}
 
 calculator();
 
 // eslint-disable-next-line max-lines-per-function, max-statements
 function calculator() {
-  console.log(messages.askNum1);
+  console.log(prompt('askNum1'));
   let firstNumber = readlineSync.question();
   while (invalidNumber(firstNumber)) {
-    console.log(messages.reAskNum1);
+    console.log(prompt('reAskNum1'));
     firstNumber = readlineSync.question();
   }
 
-  console.log(messages.askNum2);
+  console.log(prompt('askNum2'));
   let secondNumber = readlineSync.question();
   while (invalidNumber(secondNumber)) {
-    console.log(messages.reAskNum2);
+    console.log(prompt('reAskNum2'));
     secondNumber = readlineSync.question();
   }
 
-  console.log(messages.reAskOperation);
+  console.log(prompt('askOperation'));
   let operation = readlineSync.question();
   while (operation <= 0 || operation >= 5 || Number.isNaN(Number(operation))) {
-    console.log(messages.reAskOperation);
+    console.log(prompt('reAskOperation'));
     operation = readlineSync.question();
   }
 
   logResult(operation, +firstNumber, +secondNumber);
 
-  let goAgain = readlineSync.question(messages.goAgain);
+  let goAgain = readlineSync.question(prompt('goAgain'));
   if (goAgain == '1') calculator();
 
 }
@@ -80,3 +74,4 @@ function logResult(operator, num1, num2) {
       break;
   }
 }
+
