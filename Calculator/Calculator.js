@@ -25,7 +25,11 @@ function calculator() {
     operation = readlineSync.question();
   }
 
-  logResult(operation, firstNumber, secondNumber);
+  logResult(operation, +firstNumber, +secondNumber);
+
+  let goAgain = readlineSync.question("=> Go again? 1-Yes 2-No: ");
+  if (goAgain == '1') calculator();
+
 }
 
 function invalidNumber(number) {
