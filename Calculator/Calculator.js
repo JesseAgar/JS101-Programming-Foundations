@@ -1,31 +1,60 @@
 let readlineSync = require('readline-sync');
+let language = readlineSync.question(" => Language? en- English fr- French (default- English):  ");
+let messages = require('./calculator-message.json');
+
+function prompt(message) {
+  return messages[language][message];
+}
 
 calculator();
 
+/*UNDERSTAND THE PROBLEM
+  - read the problem description 
+  - identify INPUTS/OUTPUTS
+
+// ? asdf asdf as
+  - identify RULES/REQUIREMENTS
+?
+  - mental model problem. Sort of like a VERY simple algorithm. Just describe what you broadly need to do.
+  - examine all given examples for info
+  - ask clarifying questions
+EXAMPLES/TEST CASES
+  - understand how the input translates to output
+  - identify VALID CASES
+?
+  - identify EDGE CASES
+?
+  - create the test cases and confirm outputs
+*/
+
 // eslint-disable-next-line max-lines-per-function, max-statements
 function calculator() {
-  console.log("=> First Number:");
+  console.log(prompt('askNum1'));
   let firstNumber = readlineSync.question();
   while (invalidNumber(firstNumber)) {
-    console.log("=> Invalid input. First Number:");
+    console.log(prompt('reAskNum1'));
     firstNumber = readlineSync.question();
   }
 
-  console.log("=> Second Number:");
+  console.log(prompt('askNum2'));
   let secondNumber = readlineSync.question();
   while (invalidNumber(secondNumber)) {
-    console.log("=> Invalid input. Second Number:");
+    console.log(prompt('reAskNum2'));
     secondNumber = readlineSync.question();
   }
 
-  console.log("=> Operation ( 1 = addition, 2 = subtraction, 3 = division, 4 = multiplication):");
+  console.log(prompt('askOperation'));
   let operation = readlineSync.question();
   while (operation <= 0 || operation >= 5 || Number.isNaN(Number(operation))) {
-    console.log("=> Invalid input. Operation ( 1 = addition, 2 = subtraction, 3 = division, 4 = multiplication):");
+    console.log(prompt('reAskOperation'));
     operation = readlineSync.question();
   }
 
-  logResult(operation, firstNumber, secondNumber);
+  logResult(operation, +firstNumber, +secondNumber);
+
+  let goAgain = readlineSync.question(prompt('goAgain'));
+  if (goAgain == '1') calculator();
+
 }
 
 function invalidNumber(number) {
@@ -64,3 +93,4 @@ function logResult(operator, num1, num2) {
       break;
   }
 }
+

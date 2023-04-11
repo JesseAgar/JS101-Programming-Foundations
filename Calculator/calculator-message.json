@@ -1,0 +1,22 @@
+{
+  "en": {
+    "askNum1": "=> First Number:",
+    "reAskNum1": "=> Invalid input. First Number:",
+    "askNum2": "=> Second Number:",
+    "reAskNum2": "=> Invalid input. Second Number:",
+    "askOperation": "=> Operation ( 1 = addition, 2 = subtraction, 3 = division, 4 = multiplication):",
+    "reAskOperation": "=> Invalid input. Operation ( 1 = addition, 2 = subtraction, 3 = division, 4 = multiplication):",
+    "goAgain": "=> Go again? 1-Yes 2-No: "
+  },
+  "fr": {
+    "askNum1": "=> FR First Number:",
+    "reAskNum1": "=> FR Invalid input. First Number:",
+    "askNum2": "=> FR Second Number:",
+    "reAskNum2": "=> FR Invalid input. Second Number:",
+    "askOperation": "=> FR Operation ( 1 = addition, 2 = subtraction, 3 = division, 4 = multiplication):",
+    "reAskOperation": "=> FR Invalid input. Operation ( 1 = addition, 2 = subtraction, 3 = division, 4 = multiplication):",
+    "goAgain": "=> FR Go again? 1-Yes 2-No: "
+  }
+}
+
+
