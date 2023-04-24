@@ -45,6 +45,7 @@
 */
 
 let readlineSync = require('readline-sync');
+
 apple = 12;
 
 function mortgageLoanCalculator() {
@@ -52,7 +53,7 @@ function mortgageLoanCalculator() {
 
 }
 function getLoan() {
-  
+
 }
 function isValidLoan() {
 
@@ -67,5 +68,5 @@ function isValidMonths() {
 }
 
 function calcMonthlyMortgageLoan() {
-
+  
 }
