@@ -45,7 +45,7 @@
 */
 
 let readlineSync = require('readline-sync');
-apple = 12;
+let messages = require('MLC-messages.json');
 
 function mortgageLoanCalculator() {
   getLoan();
@@ -54,6 +54,9 @@ function mortgageLoanCalculator() {
 function getLoan() {
   
 }
+
+apple = 12;
+
 function isValidLoan() {
 
 }
