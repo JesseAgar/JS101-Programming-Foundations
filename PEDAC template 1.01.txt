@@ -18,8 +18,8 @@
 ?
   - create the test cases and confirm outputs */
   exampleFunction(input) //! expected output
-
-  /* !DATA STRUCTURES
+/* 
+  *DATA STRUCTURES
     - what sort of actions do you have to do (sort, collect, filter, etc.)
     - what kind of data are you primarily dealing with? (strings, arrays, numbers, objects, etc.)
     - focus on methods for these types
