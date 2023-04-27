@@ -7,11 +7,11 @@
   - ask clarifying questions
   - examine all examples
 * INPUTS
-? 
+? -
 * OUTPUTS
-? 
+? -
 * RULES AND REQUIREMENTS
-? 
+? -
 */
 /* EXAMPLES/TEST CASES
   - understand how the input translates to output
@@ -21,23 +21,20 @@
 
 // * EDGE CASES
 
-/* DATA STRUCTURES
+/* 
+* DATA STRUCTURES
   - what sort of actions do you have to do (sort, collect, filter, etc.)
   - what kind of data are you primarily dealing with? (strings, arrays, numbers, objects, etc.)
   - this helps you to focus on methods for these types
-? 
-
-*/
-/* ALGORITHM
+? -
+* ALGORITHM
   - step by step process that takes you from input to output
   - handles edges cases and valid example inputs
   - your code will depend on your algorithm
-? 
-?
-?
-*/
-
-/* CODE
+? -
+? -
+? -
+* CODE
   - time to write the code!
   - use everything you've gathered in your pedac to write the code 
 
