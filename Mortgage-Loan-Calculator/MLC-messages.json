@@ -1,0 +1,8 @@
+{
+  "askLoan": "What is the amount of the loan?  =>  ",
+  "askAPR": "What is the APR in % (ex. 12, 12%) ?  =>  ",
+  "askDuration": "What is the duration of the loan in months?  =>  ",
+  "invalidLoan": "Invalid Loan input, ",
+  "invalidAPR": "Invalid APR input, ",
+  "invalidDuration": "Invalid duration in months input, "
+}
