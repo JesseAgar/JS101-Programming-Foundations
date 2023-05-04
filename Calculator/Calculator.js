@@ -8,25 +8,6 @@ function prompt(message) {
 
 calculator();
 
-/*UNDERSTAND THE PROBLEM
-  - read the problem description 
-  - identify INPUTS/OUTPUTS
-
-// ? asdf asdf as
-  - identify RULES/REQUIREMENTS
-?
-  - mental model problem. Sort of like a VERY simple algorithm. Just describe what you broadly need to do.
-  - examine all given examples for info
-  - ask clarifying questions
-EXAMPLES/TEST CASES
-  - understand how the input translates to output
-  - identify VALID CASES
-?
-  - identify EDGE CASES
-?
-  - create the test cases and confirm outputs
-*/
-
 // eslint-disable-next-line max-lines-per-function, max-statements
 function calculator() {
   console.log(prompt('askNum1'));
