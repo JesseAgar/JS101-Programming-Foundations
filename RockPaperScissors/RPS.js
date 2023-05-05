@@ -13,7 +13,7 @@ const RESPONSES = {
   playAgain: "Would you like to play again? (y/n)",
 };
 
-rockPaperScissors();
+// rockPaperScissors();
 
 function rockPaperScissors() {
   print(RESPONSES.welcome);
@@ -22,7 +22,7 @@ function rockPaperScissors() {
   let computerChoice = getComputerChoice(VALID_CHOICES);
 
   print(RESPONSES.revealChoices(userChoice, computerChoice));
-  printResult(userChoice, computerChoice);
+  printGameResult(userChoice, computerChoice);
 
   playAgain();
 }
@@ -45,7 +45,7 @@ function getComputerChoice(validChoices) {
   return validChoices[Math.floor(Math.random() * validChoices.length)];
 }
 
-function printResult(userPlay, compPlay) {
+function printGameResult(userPlay, compPlay) {
   if (userPlay === compPlay) {
     print(RESPONSES.tie);
   } else if ((userPlay === 'rock' && compPlay === 'scissors') ||
