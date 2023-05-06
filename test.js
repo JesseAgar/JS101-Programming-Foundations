@@ -1,8 +1,2 @@
-let myVar = [1];
-
-function myFunc(myVar) {
-myVar[0] = [2];
-}
-
-myFunc();
-console.log(myVar);
+let numWins = 'af'
+console.log(typeof numWins != 'number');
