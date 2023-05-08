@@ -1,7 +1,7 @@
 const readlineSync = require('readline-sync');
 
 const GAME_PARAMETERS = {
-  ruleSet: 'B',
+  ruleSet: 'C',
   maxPossibleWins: 10,
   ruleBoxPadding: 3,
 };
@@ -114,6 +114,7 @@ function playTournament() {
          scoreCounter.compWins < scoreCounter.winsNeeded) {
     playRound(scoreCounter);
   }
+
   wait(1000);
   printTournamentWinner(scoreCounter);
 }
@@ -188,7 +189,9 @@ function printWinOrLose(userPlay, compPlay) {
 }
 
 function updateScoreCounter(userPlay, compPlay, score) {
-  if (theyWonAgainst(userPlay, compPlay)) {
+  if (userPlay === compPlay) {
+    return; // prevents scoring when an option is listed as defeating itself.
+  } else if (theyWonAgainst(userPlay, compPlay)) {
     score.playerWins += 1;
   } else if (theyWonAgainst(compPlay, userPlay)) {
     score.compWins += 1;
