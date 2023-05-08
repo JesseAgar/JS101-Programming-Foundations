@@ -1,8 +1,8 @@
 const readlineSync = require('readline-sync');
 
 const GAME_PARAMETERS = {
-  ruleSet: 'C',
-  maxPossibleWins: 4,
+  ruleSet: 'B',
+  maxPossibleWins: 10,
   ruleBoxPadding: 3,
 };
 
@@ -119,7 +119,7 @@ function playTournament() {
 }
 
 function getOptionsAndRules() {
-  return RPS_RULE_SETS['ruleSet' + GAME_PARAMETERS.ruleSet];
+  return RPS_RULE_SETS['ruleSet' + GAME_PARAMETERS.ruleSet.toUpperCase()];
 }
 
 function playRound(scoreCounter) {
