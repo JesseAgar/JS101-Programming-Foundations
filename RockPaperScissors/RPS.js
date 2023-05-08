@@ -222,7 +222,6 @@ function printAskToChoose() {
   let optionsAndAbbreviations = [];
   pushOptionsAndAbbreviations(optionsAndAbbreviations);
   print(RESPONSE.selectOption + ':\n' + optionsAndAbbreviations.join('') + '\n');
-  print(RESPONSE.exitInstructions + '\n');
 }
 
 function printScore(score) {
@@ -256,8 +255,9 @@ function printRules() {
   addPaddingToElements(rules, longestLine, boxPadding);
   pushBoxTopAndBottom(rules, longestLine, boxPadding);
 
-  rules.push('');
   console.log(rules.join('\n'));
+  console.log(RESPONSE.exitInstructions);
+  console.log('\n');
 }
 
 function pushOptionsAndConditions(rules) {
