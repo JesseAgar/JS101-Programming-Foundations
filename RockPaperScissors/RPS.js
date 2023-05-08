@@ -66,7 +66,6 @@ const RESPONSE = {
   farewell: "Thanks! Please play again.\n",
   rulesTitle: "WHAT EACH OPTION CAN DEFEAT",
   selectOption: "Select your throw",
-  scoreTitle: "--SCORE--",
   playerScoreName: "You",
   compScoreName: "Computer",
   winsName: "Wins Needed",
