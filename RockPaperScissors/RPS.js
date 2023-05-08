@@ -1,7 +1,7 @@
 const readlineSync = require('readline-sync');
 
 const GAME_PARAMETERS = {
-  ruleSet: 'C',
+  ruleSet: 'A',
   maxPossibleWins: 10,
   ruleBoxPadding: 3,
 };
@@ -61,19 +61,21 @@ const RESPONSE = {
   separator: "\n----------------------\n",
   askPlayAgain: "Would you like to play again?\n",
   askNumGames: `How many wins do you want to play till? (between 1 and ${GAME_PARAMETERS.maxPossibleWins})\n`,
-  endCompWin: "!!!!!!!!!!  THE COMPUTER WINS THE TOURNAMENT  !!!!!!!\n",
-  endPlayerWin: "!!!!!!!!!!  YOU WIN THE TOURNAMENT  !!!!!!!!!\n",
+  endCompWin: "!!!!!!!!!!  THE COMPUTER WINS THE TOURNAMENT  !!!!!!!!!!\n",
+  endPlayerWin: "!!!!!!!!!!  YOU WIN THE TOURNAMENT  !!!!!!!!!!\n",
   farewell: "Thanks! Please play again.\n",
   rulesTitle: "WHAT EACH OPTION CAN DEFEAT",
   selectOption: "Select your throw",
   playerScoreName: "You",
   compScoreName: "Computer",
   winsName: "Wins Needed",
+  exitInstructions: "(type 'quit' to quit)",
 };
 
 const YES_OR_NO = {
   "n": false,
   "no": false,
+  "quit": false,
   "y": true,
   "yes": true,
   "sure": true,
@@ -92,8 +94,7 @@ function startRPS() {
     playTournament();
   }
 
-  console.clear();
-  print(RESPONSE.farewell);
+  quit();
 }
 
 function playTournament() {
@@ -140,6 +141,7 @@ function playRound(scoreCounter) {
 
 function getWinsLimit() {
   print(RESPONSE.askNumGames);
+
   let numWins = Number(readlineSync.prompt());
   while (isNaN(numWins) || numWins < 1 ||
          numWins > GAME_PARAMETERS.maxPossibleWins) {
@@ -152,12 +154,14 @@ function getWinsLimit() {
 }
 
 function getUserChoice() {
-  print(printAskToChoose());
+  printAskToChoose();
   let choice = readlineSync.prompt().trim().toLowerCase();
+  if (choice === 'quit') quit();
 
   if (isInvalidChoice(choice)) {
     print(RESPONSE.invalidChoice);
     choice = getUserChoice();
+    if (choice === 'quit') quit();
   }
 
   if (Object.keys(ABBR_OPTIONS).includes(choice)) return ABBR_OPTIONS[choice];
@@ -217,7 +221,8 @@ function wantsToPlayAgain() {
 function printAskToChoose() {
   let optionsAndAbbreviations = [];
   pushOptionsAndAbbreviations(optionsAndAbbreviations);
-  return RESPONSE.selectOption + ':\n' + optionsAndAbbreviations.join('') + '\n';
+  print(RESPONSE.selectOption + ':\n' + optionsAndAbbreviations.join('') + '\n');
+  print(RESPONSE.exitInstructions + '\n');
 }
 
 function printScore(score) {
@@ -250,8 +255,8 @@ function printRules() {
 
   addPaddingToElements(rules, longestLine, boxPadding);
   pushBoxTopAndBottom(rules, longestLine, boxPadding);
-  rules.push('');
 
+  rules.push('');
   console.log(rules.join('\n'));
 }
 
@@ -332,4 +337,10 @@ function wait(timeLimitMilliseconds) {
       timerDone = true;
     }
   }
+}
+
+function quit() {
+  console.clear();
+  print(RESPONSE.farewell);
+  process.exit();
 }
