@@ -1,7 +1,7 @@
 const readlineSync = require('readline-sync');
 
 const GAME_PARAMETERS = {
-  ruleSet: 'A',
+  ruleSet: 'C',
   maxPossibleWins: 10,
   ruleBoxPadding: 3,
 };
