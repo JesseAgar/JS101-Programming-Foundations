@@ -156,12 +156,12 @@ function getWinsLimit() {
 function getUserChoice() {
   printAskToChoose();
   let choice = readlineSync.prompt().trim().toLowerCase();
-  if (choice === 'quit') quit();
+  if (choice.trim().toLowerCase() === 'quit') quit();
 
   if (isInvalidChoice(choice)) {
     print(RESPONSE.invalidChoice);
     choice = getUserChoice();
-    if (choice === 'quit') quit();
+    if (choice.trim().toLowerCase() === 'quit') quit();
   }
 
   if (Object.keys(ABBR_OPTIONS).includes(choice)) return ABBR_OPTIONS[choice];
