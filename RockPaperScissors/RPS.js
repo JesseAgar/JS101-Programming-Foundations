@@ -1,12 +1,37 @@
 const readlineSync = require('readline-sync');
 
-const VALID_CHOICES_WINNABLES = {
-  rock: ['scissors', 'lizard'],
-  paper: ['rock', 'spock'],
-  scissors: ['paper', 'lizard'],
-  spock: ['scissors', 'rock'],
-  lizard: ['paper', 'spock'],
-  dynamite: ['rock', 'paper', 'scissors', 'lizard', 'spock'],
+const GAME_PARAMETERS = {
+  ruleSet: 'C',
+  maxPossibleWins: 4,
+  ruleBoxPadding: 3,
+};
+
+const RPS_RULE_SETS = {
+  ruleSetA: {
+    rock: ['scissors'],
+    paper: ['rock'],
+    scissors: ['paper'],
+  },
+
+  ruleSetB: {
+    rock: ['scissors', 'lizard'],
+    paper: ['rock', 'spock'],
+    scissors: ['paper', 'lizard'],
+    spock: ['scissors', 'rock'],
+    lizard: ['paper', 'spock'],
+  },
+
+  ruleSetC: {
+    'rock': ['scissors', 'lizard', 'wet noodle'],
+    'paper': ['rock', 'spock', 'wet noodle'],
+    'scissors': ['paper', 'lizard', 'wet noodle'],
+    'spock': ['scissors', 'rock', 'wet noodle'],
+    'lizard': ['paper', 'spock', 'wet noodle'],
+    'dynamite': ['rock', 'paper', 'scissors', 'lizard', 'spock',
+      'wet noodle'],
+    'wet noodle': ['(nothing)'],
+    'puppy': ['spock', 'wet noodle']
+  },
 };
 
 const ABBR_OPTIONS = {
@@ -17,78 +42,109 @@ const ABBR_OPTIONS = {
   l: 'lizard',
   liz: 'lizard',
   d: 'dynamite',
+  sc: 'scissors',
+  sp: 'spock',
+  w: 'wet noodle',
+  u: 'puppy',
+  pu: 'puppy',
+  pup: 'puppy',
+  pa: 'paper',
 };
 
-let winsNeeded = 1;
-let playerWins = 0;
-let compWins = 0;
-
-const RESPONSES = {
-  welcome: "Let's play Rock, Paper, Scissors!",
-  askToChoose() {
-    let askToChooseMessage = [];
-    pushOptionsAndAbbr(askToChooseMessage);
-    return "Please choose:" + askToChooseMessage.join('');
-  },
-  invalidChoice: "That is not a valid choice.",
-  tie: "It's a tie!",
-  win: "You win!",
-  lose: "You lose!",
-  separator: "----------------------",
-  revealChoices(userChoice, computerChoice) {
-    return `You played ${userChoice}, the computer played ${computerChoice}`;
-  },
-  playAgain: "Would you like to play again? (y/n)",
-  askNumGames: "How many wins do you want to play till? (between 1 and 10)",
-  endGameCompWin: "THE COMPUTER WINS THE TOURNAMENT!!!!!!!",
-  endGamePlayerWin: "YOU WIN THE TOURNAMENT!!!!!!!!!",
+const RESPONSE = {
+  welcome: "Let's play Rock, Paper, Scissors! \n",
+  invalidChoice: "\n<< INVALID CHOICE >>\n",
+  onTie: "IT'S A DRAW! (you both played the same option)\n",
+  onWin: "YOU WIN!\n",
+  onLose: "YOU LOSE!\n",
+  onNonWin: "IT'S A STALEMATE... nobody's choice beats the other's \n",
+  separator: "\n----------------------\n",
+  askPlayAgain: "Would you like to play again?\n",
+  askNumGames: `How many wins do you want to play till? (between 1 and ${GAME_PARAMETERS.maxPossibleWins})\n`,
+  endCompWin: "!!!!!!!!!!  THE COMPUTER WINS THE TOURNAMENT  !!!!!!!\n",
+  endPlayerWin: "!!!!!!!!!!  YOU WIN THE TOURNAMENT  !!!!!!!!!\n",
+  farewell: "Thanks! Please play again.\n",
+  rulesTitle: "WHAT EACH OPTION CAN DEFEAT",
+  selectOption: "Select your throw",
+  scoreTitle: "--SCORE--",
+  playerScoreName: "You",
+  compScoreName: "Computer",
+  winsName: "Wins Needed",
 };
+
+const YES_OR_NO = {
+  "n": false,
+  "no": false,
+  "y": true,
+  "yes": true,
+  "sure": true,
+  "fine": true,
+  "please never again": true,
+};
+
+const DEFAULT_RESPONSE_PREFIX = "     ";
 
 startRPS();
 
 function startRPS() {
-  print(RESPONSES.welcome);
+  playTournament();
 
-  gameLoop();
+  while (wantsToPlayAgain()) {
+    playTournament();
+  }
+
+  console.clear();
+  print(RESPONSE.farewell);
 }
 
-function gameLoop() {
-  winsNeeded = getNumberOfGames();
+function playTournament() {
+  let scoreCounter = {
+    winsNeeded: 1,
+    playerWins: 0,
+    compWins: 0,
+  };
 
-  while (playerWins < winsNeeded && compWins < winsNeeded) {
-    rockPaperScissors();
+  console.clear();
+  print(RESPONSE.welcome);
+  scoreCounter.winsNeeded = getWinsLimit();
+
+  console.clear();
+  printRules();
+
+  while (scoreCounter.playerWins < scoreCounter.winsNeeded &&
+         scoreCounter.compWins < scoreCounter.winsNeeded) {
+    playRound(scoreCounter);
   }
-
-  if (compWins === winsNeeded) {
-    print(RESPONSES.endGameCompWin);
-  }
-
-  if (playerWins === winsNeeded) {
-    print(RESPONSES.endGamePlayerWin);
-  }
-
-  playAgain();
+  wait(1000);
+  printTournamentWinner(scoreCounter);
 }
 
-function rockPaperScissors() {
+function getOptionsAndRules() {
+  return RPS_RULE_SETS['ruleSet' + GAME_PARAMETERS.ruleSet];
+}
+
+function playRound(scoreCounter) {
   let userChoice = getUserChoice();
-  let computerChoice = getComputerChoice(Object.keys(VALID_CHOICES_WINNABLES));
+  let computerChoice = getComputerChoice(Object.keys(getOptionsAndRules()));
 
-  print(RESPONSES.revealChoices(userChoice, computerChoice));
-  updateScore(userChoice, computerChoice);
-  printGameResult(userChoice, computerChoice);
+  console.clear();
+  printRules();
+  print(`You played  ${userChoice.toUpperCase()}`);
+  wait(50);
+  print(`The computer played  ${computerChoice.toUpperCase()}\n`);
+  wait(1000);
+  printWinOrLose(userChoice, computerChoice);
+  updateScoreCounter(userChoice, computerChoice, scoreCounter);
+  printScore(scoreCounter);
 }
 
-function print(stringToPrint) {
-  console.log("   => " + stringToPrint);
-}
-
-function getNumberOfGames() {
-  print(RESPONSES.askNumGames);
+function getWinsLimit() {
+  print(RESPONSE.askNumGames);
   let numWins = Number(readlineSync.prompt());
-  while (isNAN(numWins) || numWins < 1 || numWins > 10) {
-    print(RESPONSES.invalidChoice);
-    print(RESPONSES.askNumGames);
+  while (isNaN(numWins) || numWins < 1 ||
+         numWins > GAME_PARAMETERS.maxPossibleWins) {
+    print(RESPONSE.invalidChoice);
+    print(RESPONSE.askNumGames);
     numWins = Number(readlineSync.prompt());
   }
 
@@ -96,12 +152,11 @@ function getNumberOfGames() {
 }
 
 function getUserChoice() {
-  print(RESPONSES.askToChoose());
-  let choice = readlineSync.prompt().trim().toLocaleLowerCase();
+  print(printAskToChoose());
+  let choice = readlineSync.prompt().trim().toLowerCase();
 
-  if (!Object.keys(VALID_CHOICES_WINNABLES).includes(choice) &&
-      !Object.keys(ABBR_OPTIONS).includes(choice)) {
-    print(RESPONSES.invalidChoice);
+  if (isInvalidChoice(choice)) {
+    print(RESPONSE.invalidChoice);
     choice = getUserChoice();
   }
 
@@ -110,79 +165,169 @@ function getUserChoice() {
   return choice;
 }
 
-function isNAN(input) {
-  return input !== input;
+function isInvalidChoice(choice) {
+  return (!Object.keys(getOptionsAndRules()).includes(choice) &&
+  !Object.keys(ABBR_OPTIONS).includes(choice)) ||
+  (!Object.keys(getOptionsAndRules()).includes(ABBR_OPTIONS[choice]) &&
+  !Object.keys(getOptionsAndRules()).includes(choice));
 }
 
 function getComputerChoice(validChoices) {
   return validChoices[Math.floor(Math.random() * validChoices.length)];
 }
 
-function printGameResult(userPlay, compPlay) {
+function printWinOrLose(userPlay, compPlay) {
   if (userPlay === compPlay) {
-    print(RESPONSES.tie);
-    print(`You:${playerWins} Computer:${compWins} Wins Needed: ${winsNeeded}`);
-    console.log(RESPONSES.separator);
-  } else if (userWinConditions(userPlay, compPlay)) {
-    print(RESPONSES.win);
-    print(`You:${playerWins} Computer:${compWins} Wins Needed: ${winsNeeded}`);
-    console.log(RESPONSES.separator);
+    print(RESPONSE.onTie);
+  } else if (theyWonAgainst(compPlay, userPlay)) {
+    print(RESPONSE.onLose);
+  } else if (theyWonAgainst(userPlay, compPlay)) {
+    print(RESPONSE.onWin);
   } else {
-    print(RESPONSES.lose);
-    print(`You:${playerWins} Computer:${compWins} Wins Needed: ${winsNeeded}`);
-    console.log(RESPONSES.separator);
+    print(RESPONSE.onNonWin);
   }
 }
 
-function userWinConditions(userPlay, compPlay) {
-  return VALID_CHOICES_WINNABLES[userPlay].includes(compPlay);
-}
-
-function updateScore(userPlay, compPlay) {
-  if (userPlay === compPlay) {
-    return;
-  } else if (VALID_CHOICES_WINNABLES[userPlay].includes(compPlay)) {
-    playerWins += 1;
-  } else {
-    compWins += 1;
+function updateScoreCounter(userPlay, compPlay, score) {
+  if (theyWonAgainst(userPlay, compPlay)) {
+    score.playerWins += 1;
+  } else if (theyWonAgainst(compPlay, userPlay)) {
+    score.compWins += 1;
   }
 }
 
-function playAgain() {
-  print(RESPONSES.playAgain);
+function theyWonAgainst(play1, play2) {
+  return getOptionsAndRules()[play1].includes(play2);
+}
+
+function wantsToPlayAgain() {
+  print(RESPONSE.askPlayAgain);
   let again = readlineSync.prompt().trim().toLowerCase();
-  if (again === 'y') {
-    playerWins = 0;
-    compWins = 0;
-    winsNeeded = 1;
-    gameLoop();
+  while (!Object.keys(YES_OR_NO).includes(again)) {
+    print(RESPONSE.invalidChoice);
+    print(RESPONSE.askPlayAgain);
+    again = readlineSync.prompt().trim().toLowerCase();
+  }
+
+  return YES_OR_NO[again];
+}
+
+function printAskToChoose() {
+  let optionsAndAbbreviations = [];
+  pushOptionsAndAbbreviations(optionsAndAbbreviations);
+  return RESPONSE.selectOption + ':\n' + optionsAndAbbreviations.join('') + '\n';
+}
+
+function printScore(score) {
+  print('--SCORE--');
+  print(`${RESPONSE.playerScoreName}: ${score.playerWins}`);
+  print(`${RESPONSE.compScoreName}: ${score.compWins}`);
+  print('');
+  print(`(first to ${score.winsNeeded})`);
+  console.log(RESPONSE.separator);
+}
+
+function printTournamentWinner(score) {
+  if (score.compWins === score.winsNeeded) {
+    print(RESPONSE.endCompWin);
+  }
+
+  if (score.playerWins === score.winsNeeded) {
+    print(RESPONSE.endPlayerWin);
   }
 }
 
-function pushOptionsAndAbbr(message) {
-  for (let validChoice of Object.keys(VALID_CHOICES_WINNABLES)) {
-    message.push('\n');
-    message.push(`   => '${validChoice}'`);
-    let firstAbbrOption = true;
-    pushAbbr(message, firstAbbrOption, validChoice);
+function printRules() {
+  let boxPadding = GAME_PARAMETERS.ruleBoxPadding;
+  let rules = [];
+
+  rules.push(RESPONSE.rulesTitle);
+  pushOptionsAndConditions(rules);
+
+  let longestLine = getLongestLength(rules);
+
+  addPaddingToElements(rules, longestLine, boxPadding);
+  pushBoxTopAndBottom(rules, longestLine, boxPadding);
+  rules.push('');
+
+  console.log(rules.join('\n'));
+}
+
+function pushOptionsAndConditions(rules) {
+  for (let validChoice in getOptionsAndRules()) {
+    rules.push(validChoice + '   >>   ' + getOptionsAndRules()[validChoice].join(' | '));
+    rules.push('');
   }
 }
 
-function pushAbbr(message, firstAbbrCheck, validChoice) {
-  if (Object.values(ABBR_OPTIONS).includes(validChoice)) {
-    message.push(' (');
+function addPaddingToElements(array, goalLength, padding) {
+  for (let index = 0; index < array.length; index++) {
+    array[index] = '|' + createSpaces(padding) + array[index] +
+                   createSpaces(padding + goalLength - array[index].length) + '|';
+  }
+}
 
-    for (let key in ABBR_OPTIONS) {
-      if (ABBR_OPTIONS[key] === validChoice) {
-        if (firstAbbrCheck === true) {
-          firstAbbrCheck = false;
-          message.push(`'${key}'`);
-        } else {
-          message.push(`, '${key}'`);
+function pushBoxTopAndBottom(array, length, padding) {
+  array.unshift(createDashes(length + (2 * padding) + 2));
+  array.push(createDashes(length + (2 * padding) + 2));
+}
+
+function print(stringToPrint) {
+  console.log(DEFAULT_RESPONSE_PREFIX + stringToPrint);
+}
+
+function pushOptionsAndAbbreviations(messageArray) {
+  for (let validChoice of Object.keys(getOptionsAndRules())) {
+    messageArray.push('\n');
+    messageArray.push(DEFAULT_RESPONSE_PREFIX + `'${validChoice}'`);
+
+    let hasAnAbbreviation = Object.values(ABBR_OPTIONS).includes(validChoice);
+    if (hasAnAbbreviation) {
+      messageArray.push(' (');
+      let abbreviations = [];
+      for (let key in ABBR_OPTIONS) {
+        if (ABBR_OPTIONS[key] === validChoice) {
+          abbreviations.push("'" + key + "'");
         }
       }
+      messageArray.push(abbreviations.join(', '));
+      messageArray.push(')');
     }
+  }
+}
 
-    message.push(')');
+function createSpaces(numberOfSpaces) {
+  let spaces = [];
+  for (let spaceCount = 0; spaceCount < numberOfSpaces; spaceCount++) {
+    spaces.push(' ');
+  }
+  return spaces.join('');
+}
+
+function createDashes(numberOfDashes) {
+  let padding = [];
+  for (let dashCount = 0; dashCount < numberOfDashes; dashCount++) {
+    padding.push('-');
+  }
+  return padding.join('');
+}
+
+function getLongestLength(array) {
+  let longestElement = 0;
+  for (let element of array) {
+    if (element.length > longestElement) longestElement = element.length;
+  }
+  return longestElement;
+}
+
+function wait(timeLimitMilliseconds) {
+  let startTime = new Date().getTime();
+  let timerDone = false;
+  while (!timerDone) {
+    let currentTime = new Date().getTime();
+    let timeElapsed = currentTime - startTime;
+    if (timeElapsed >= timeLimitMilliseconds) {
+      timerDone = true;
+    }
   }
 }
