@@ -1,7 +1,7 @@
 const readlineSync = require('readline-sync');
 
 const GAME_PARAMETERS = {
-  ruleSet: 'C',
+  ruleSet: 'B',
   maxPossibleWins: 10,
   ruleBoxPadding: 3,
 };
@@ -131,9 +131,9 @@ function playRound(scoreCounter) {
   console.clear();
   printRules();
   print(`You played  ${userChoice.toUpperCase()}`);
-  wait(50);
+  wait(700);
   print(`The computer played  ${computerChoice.toUpperCase()}\n`);
-  wait(1000);
+  processingAnimation();
   printWinOrLose(userChoice, computerChoice);
   updateScoreCounter(userChoice, computerChoice, scoreCounter);
   printScore(scoreCounter);
@@ -194,8 +194,10 @@ function printWinOrLose(userPlay, compPlay) {
 
 function updateScoreCounter(userPlay, compPlay, score) {
   if (userPlay === compPlay) {
-    return; // prevents scoring when an option is listed as defeating itself.
-  } else if (theyWonAgainst(userPlay, compPlay)) {
+    return;
+  }
+
+  if (theyWonAgainst(userPlay, compPlay)) {
     score.playerWins += 1;
   } else if (theyWonAgainst(compPlay, userPlay)) {
     score.compWins += 1;
@@ -343,4 +345,11 @@ function quit() {
   console.clear();
   print(RESPONSE.farewell);
   process.exit();
+}
+
+function processingAnimation() {
+  wait(700);
+  print('...');
+  wait(700);
+  print('');
 }
