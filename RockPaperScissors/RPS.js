@@ -1,7 +1,7 @@
 const readlineSync = require('readline-sync');
 
 const GAME_PARAMETERS = {
-  ruleSet: 'a',
+  ruleSet: 'A',
   maxPossibleWins: 10,
   ruleBoxPadding: 3,
 };
@@ -88,10 +88,9 @@ const DEFAULT_RESPONSE_PREFIX = "     ";
 startRPS();
 
 function startRPS() {
-  playTournament();
-
-  while (wantsToPlayAgain()) {
+  while (true) {
     playTournament();
+    if (!wantsToPlayAgain()) break;
   }
 
   quit();
@@ -110,17 +109,18 @@ function playTournament() {
   console.clear();
   printRules();
 
-  while (nobodysWonYet(scoreCounter.playerWins, scoreCounter.compWins,
-    scoreCounter.winsNeeded)) {
+  while (true) {
     playRound(scoreCounter);
+    if (someoneWon(scoreCounter.playerWins, scoreCounter.compWins,
+      scoreCounter.winsNeeded)) break;
   }
 
   wait(1000);
   printTournamentWinner(scoreCounter);
 }
 
-function nobodysWonYet(playerAScore, playerBScore, winsNeeded) {
-  return playerAScore < winsNeeded && playerBScore < winsNeeded;
+function someoneWon(playerAScore, playerBScore, winsNeeded) {
+  return playerAScore >= winsNeeded || playerBScore >= winsNeeded;
 }
 
 function getOptionsAndRules() {
@@ -143,34 +143,38 @@ function playRound(scoreCounter) {
 }
 
 function getWinsLimit() {
-  print(RESPONSE.askNumGames);
-
-  let numWins = Number(readlineSync.prompt());
-  while (isNaN(numWins) || numWins < 1 ||
-         numWins > GAME_PARAMETERS.maxPossibleWins) {
-    print(RESPONSE.invalidChoice);
+  while (true) {
     print(RESPONSE.askNumGames);
-    numWins = Number(readlineSync.prompt());
+    let numWins = Number(readlineSync.prompt());
+    if (validWinLimit(numWins)) return numWins;
+    print(RESPONSE.invalidChoice);
   }
+}
 
-  return numWins;
+function validWinLimit(winLimit) {
+  return ((!isNaN(winLimit)) && (winLimit >= 1) &&
+          (winLimit <= GAME_PARAMETERS.maxPossibleWins));
 }
 
 function getUserChoice() {
-  printAskToChoose();
-  let choice = readlineSync.prompt().trim().toLowerCase();
-  if (choice.trim().toLowerCase() === 'quit') quit();
-
-  while (isInvalidChoice(choice)) {
-    print(RESPONSE.invalidChoice);
+  while (true) {
     printAskToChoose();
-    choice = readlineSync.prompt().trim().toLowerCase();
+    let choice = readlineSync.prompt().trim().toLowerCase();
+
     if (choice.trim().toLowerCase() === 'quit') quit();
+
+    if (isInvalidChoice(choice)) {
+      print(RESPONSE.invalidChoice);
+      continue;
+    }
+
+    if (Object.keys(ABBR_OPTIONS).includes(choice)) {
+      return ABBR_OPTIONS[choice];
+    } else {
+      return choice;
+    }
   }
 
-  if (Object.keys(ABBR_OPTIONS).includes(choice)) return ABBR_OPTIONS[choice];
-
-  return choice;
 }
 
 function isInvalidChoice(choice) {
@@ -221,15 +225,12 @@ function theyWonAgainst(play1, play2) {
 }
 
 function wantsToPlayAgain() {
-  print(RESPONSE.askPlayAgain);
-  let again = readlineSync.prompt().trim().toLowerCase();
-  while (!Object.keys(YES_OR_NO).includes(again)) {
-    print(RESPONSE.invalidChoice);
+  while (true) {
     print(RESPONSE.askPlayAgain);
-    again = readlineSync.prompt().trim().toLowerCase();
+    let again = readlineSync.prompt().trim().toLowerCase();
+    if (Object.keys(YES_OR_NO).includes(again)) return YES_OR_NO[again];
+    print(RESPONSE.invalidChoice);
   }
-
-  return YES_OR_NO[again];
 }
 
 function printAskToChoose() {
@@ -345,13 +346,10 @@ function getLongestLength(array) {
 
 function wait(timeLimitMilliseconds) {
   let startTime = new Date().getTime();
-  let timerDone = false;
-  while (!timerDone) {
+  while (true) {
     let currentTime = new Date().getTime();
     let timeElapsed = currentTime - startTime;
-    if (timeElapsed >= timeLimitMilliseconds) {
-      timerDone = true;
-    }
+    if (timeElapsed >= timeLimitMilliseconds) break;
   }
 }
 
