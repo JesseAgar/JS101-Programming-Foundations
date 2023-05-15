@@ -105,7 +105,7 @@ function playTournament() {
 
   console.clear();
   print(RESPONSE.welcome);
-  scoreCounter.winsNeeded = getWinsLimit();
+  const winsNeeded = getWinsLimit();
 
   console.clear();
   printRules();
