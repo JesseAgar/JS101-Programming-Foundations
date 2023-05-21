@@ -73,7 +73,6 @@ function computeCenturySuffix(century) {
   const secondLastDigit = centuryString[centuryString.length - 2];
 
   if (secondLastDigit === '1') return 'th';
-
   switch (lastDigit) {
     case '1': return 'st';
     case '2': return 'nd';
