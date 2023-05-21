@@ -1,1 +1,1 @@
-substring
+  return Math.floor(year / 100) + 1;

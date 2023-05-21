@@ -1,1 +1,1 @@
-console.log(true + true > '1');
+console.log( 0 % 100);
